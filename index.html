@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Shopping Cart</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
+      rel="stylesheet"
+    />
+    <link href="style.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <section>
+      <div class="container">
+        <div class="cart">
+          <div class="col-md-12 col-lg-10 mx-auto">
+            <div class="cart-item">
+              <div class="row">
+                <div class="col-md-7 center-item">
+                  <img src="images/product-1.png" alt="" />
+                  <h5>iPhone 11 128GB Black</h5>
+                </div>
+
+                <div class="col-md-5 center-item">
+                  <div class="input-group number-spinner">
+                    <button id="phone-minus-btn" class="btn btn-default">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <input
+                      id="phone-cart-no"
+                      type="text"
+                      class="form-control text-center"
+                      value="1"
+                    />
+                    <button id="phone-plus-btn" class="btn btn-default">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                  <h5>$<span id="phone-cart">1219</span></h5>
+                  <img src="images/remove.png" alt="" class="remove-item" />
+                </div>
+              </div>
+            </div>
+
+            <div class="cart-item">
+              <div class="row">
+                <div class="col-md-7 center-item mx-auto">
+                  <img src="images/product-2.png" alt="" />
+                  <h5>iPhone 11 Silicone Case - Black</h5>
+                </div>
+                <div class="col-md-5 center-item">
+                  <div class="input-group number-spinner">
+                    <button id="case-minus-btn" class="btn btn-default">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <input
+                      id="case-cart-no"
+                      type="text"
+                      class="form-control text-center"
+                      value="1"
+                    />
+                    <button id="case-plus-btn" class="btn btn-default">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                  <h5>$ <span id="case-cart">59</span></h5>
+                  <img src="images/remove.png" alt="" class="remove-item" />
+                </div>
+              </div>
+            </div>
+
+            <div class="cart-item">
+              <div class="row">
+                <div class="col-md-8">
+                  <h5>Subtotal:</h5>
+                  <h5>Tax:</h5>
+                  <h5>Total:</h5>
+                </div>
+
+                <div class="col-md-4 status">
+                  <h5>$ <span id="sub-total">00</span></h5>
+                  <h5>$0</h5>
+                  <h5>$ <span id="total-amount">00</span></h5>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 pt-4 pb-4">
+              <button type="button" class="btn btn-success check-out">
+                Check Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+  <script>
+    //Phone increase Button Event handler
+    const phonePlusButton = document.getElementById("phone-plus-btn");
+    phonePlusButton.addEventListener("click", function() {
+      phoneCartTextUpdate("phone-cart-no", 1);
+
+      const phoneSpanPrice = phoneSpanUpdate("phone-cart", 1219);
+
+      const caseSpanPrice = document.getElementById("case-cart").innerText;
+      caseUpdatePrice = parseFloat(caseSpanPrice);
+      document.getElementById("sub-total").innerText = subtotalUpdate(
+        phoneSpanPrice,
+        caseUpdatePrice
+      );
+      totalAmount("total-amount", "sub-total");
+    });
+
+    //Phone decrease Button Event handler
+    const phoneMinusButton = document.getElementById("phone-minus-btn");
+    phoneMinusButton.addEventListener("click", function() {
+      phoneCartTextUpdate("phone-cart-no", -1);
+      const phoneSpanPrice = phoneSpanUpdate("phone-cart", -1219);
+
+      const caseSpanPrice = document.getElementById("case-cart").innerText;
+      caseUpdatePrice = parseFloat(caseSpanPrice);
+      document.getElementById("sub-total").innerText = subtotalUpdate(
+        phoneSpanPrice,
+        caseUpdatePrice
+      );
+      totalAmount("total-amount", "sub-total");
+    });
+
+    //case increase Button Event handler
+    const casePlusButton = document.getElementById("case-plus-btn");
+    casePlusButton.addEventListener("click", function() {
+      phoneCartTextUpdate("case-cart-no", 1);
+
+      const caseSpanPrice = phoneSpanUpdate("case-cart", 59);
+      const phoneSpanPrice = document.getElementById("phone-cart").innerText;
+      const phoneSpanUpdated = parseFloat(phoneSpanPrice);
+      document.getElementById("sub-total").innerText = subtotalUpdate(
+        caseSpanPrice,
+        phoneSpanUpdated
+      );
+      totalAmount("total-amount", "sub-total");
+    });
+
+    //case decrease Button Event handler
+    const caseMinusButton = document.getElementById("case-minus-btn");
+    caseMinusButton.addEventListener("click", function() {
+      phoneCartTextUpdate("case-cart-no", -1);
+      const caseSpanPrice = phoneSpanUpdate("case-cart", -59);
+      const phoneSpanPrice = document.getElementById("phone-cart").innerText;
+      const phoneSpanUpdated = parseFloat(phoneSpanPrice);
+      document.getElementById("sub-total").innerText = subtotalUpdate(
+        caseSpanPrice,
+        phoneSpanUpdated
+      );
+      totalAmount("total-amount", "sub-total");
+    });
+    //function for input value change
+    function phoneCartTextUpdate(id, givenNumber) {
+      const getItemNumber = document.getElementById(id).value;
+      const getAmount = parseFloat(getItemNumber);
+      const totalAmount = getAmount + givenNumber;
+      if (isNaN(totalAmount) || totalAmount <= 0) {
+        totalAmount = 1;
+      }
+      document.getElementById(id).value = totalAmount;
+
+      return totalAmount;
+    }
+    //function for span price change
+    function phoneSpanUpdate(id, givenNumber) {
+      const getItemPrice = document.getElementById(id).innerText;
+      const getPrice = parseFloat(getItemPrice);
+      const totalAmount = getPrice + givenNumber;
+      document.getElementById(id).innerText = totalAmount;
+      return totalAmount;
+    }
+    //function for subtotal
+    function subtotalUpdate(firstNumber, secondNumber) {
+      const totalAmount = firstNumber + secondNumber;
+      return totalAmount;
+    }
+    //function for total
+    function totalAmount(total, subTotal) {
+      document.getElementById(total).innerText = document.getElementById(
+        subTotal
+      ).innerText;
+    }
+  </script>
+</html>
